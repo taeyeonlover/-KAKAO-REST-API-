@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>"{{ search }}" 검색 결과</title>
+    <link
+    rel="stylesheet"
+    as="style"
+    crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable-dynamic-subset.css"
+    />
+    <link rel="stylesheet" as="style/css" href="{{ url_for('static', filename='reset.css') }}" />
+    <link rel="stylesheet" as="style/css" href="{{ url_for('static', filename='result.css') }}" />
+    <script>
+      function showAlert() {
+        var query = document.getElementsByName("query")[0].value;
+        if (query.trim() === "") {
+          alert('검색어를 입력하세요'); // 경고 메시지를 표시
+          return false;
+        }
+        return true;
+      }
+    </script>
+</head>
+<body>
+    <main>
+      <div class="abc">
+        <a href="/">
+          <p>
+            Today a Reader, 
+          </p>
+          <p>
+            Tomorrow a Leader.
+          </p>
+        </a>
+        <span>
+        <form action="/" method="get" onsubmit="return showAlert()">
+          <input
+            type="text"
+            name="query"
+            placeholder="{% if target == 'title' %}
+            제목 '{{ search }}' 검색 결과
+            {% elif target == 'person' %}
+            저자 '{{ search }}' 검색 결과
+            {% else %}
+            출판사 '{{ search }}' 검색 결과
+            {% endif %}"
+          />
+          <select name="search_type">
+            <option value="title">제목</option>
+            <option value="person">저자</option>
+            <option value="publisher">출판사</option>
+          </select>
+          <button type = "submit"><img src="{{ url_for('static', filename='search.svg') }}" alt="Search" /></button>
+        </form>
+        </span>
+      </div>
+      </main>
+    <div>
+    <ul>{% if page %}
+        요청하신 페이지가 없습니다
+        {% else %}
+        <table>
+            {% for book in books %}
+            <tr>
+                <th colspan="3">
+                    <a href="{{ book.url }}" target="_blank">
+                    <strong class="center">{{ book.title }}</strong>
+                    </a>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                <img src="{{ book.thumbnail }}" alt="Book Thumbnail">
+                </td>
+                <td>
+                  {% if book.authors|length == 1 %}
+                      저자 <br> ── <br> <strong>{{ book.authors[0] }}</strong>
+                  {% elif book.authors|length <= 2 %}
+                      저자
+                      <br> ── <br>
+                      {% for author in book.authors %}
+                          <strong>{{ author }}</strong>
+                      {% endfor %}
+                  {% else %}
+                      저자
+                      <br> ── <br>
+                      {% for i in range(2) %}
+                          <strong>{{ book.authors[i] }}</strong>
+                      {% endfor %}
+                      외 {{ book.authors|length - 2 }}명
+                  {% endif %}
+                </td>
+                <td>
+                  출판사 
+                  <br>
+                  ───
+                  <br>
+                  <strong>{{ book.publisher }}</strong> | <strong>{{ book.published_year }}</strong>
+                </td>
+                <td>
+                  {% if book.sale_price == -1 %}
+                    가격 <br> ── <br> <strong>절 판</strong>
+                    <br>
+                    {% else %}
+                    가격 <br> ── <br> <strong>{{ book.sale_price }}원</strong>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr><td colspan="5"><hr></td></tr>
+            {% endfor %}
+          
+        </table>
+        {% endif %}
+    </ul>
+    {{ pagination.links }}
+</div>
+</body>
+</html>

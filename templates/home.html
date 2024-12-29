@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>도서 검색 | 홈</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable-dynamic-subset.css"
+    />
+    <link rel="stylesheet" as="style/css" href="{{ url_for('static', filename='reset.css') }}" />
+    <link rel="stylesheet" as="style/css" href="{{ url_for('static', filename='home.css') }}" />
+    <script>
+      function showAlert() {
+        var query = document.getElementsByName("query")[0].value;
+        if (query.trim() === "") {
+          alert('검색어를 입력하세요'); // 경고 메시지를 표시
+          return false;
+        }
+        return true;
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <div>
+        <p class="title-1">
+          <span>Today</span>
+          <span>a</span>
+          <span>Reader,</span>
+        </p>
+        <p class="title-2">
+          <span>Tomorrow</span>
+          <span>a</span>
+          <span>Leader.</span>
+        </p>
+      </div>
+      <form action="/" method="get" onsubmit="return showAlert()">
+        <input
+          type="text"
+          name="query"
+          placeholder="검색할 도서의 이름 또는 저자를 입력해주세요"
+        />
+        <select name="search_type">
+          <option value="title">제목</option>
+          <option value="person">저자</option>
+          <option value="publisher">출판사</option>
+        </select>
+        <button type = "submit"><img src="{{ url_for('static', filename='search.svg') }}" alt="Search" /></button>
+      </form>
+    </main>
+  </body>
+</html>
